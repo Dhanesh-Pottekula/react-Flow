@@ -6,20 +6,45 @@ function useHomePage() {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 const [selectedNode,setSelectedNode]=useState("")
 const [inputMessage,setInputMessage]=useState('')
-  const onConnect = useCallback(
-    (Connection) => {
+const [onSaveError,setOnSaveError]=useState([])
+
+const onConnect = useCallback(
+  (connection) => {
+    // Check if there is already an edge originating from the source
+    const existingEdge = edges.find(
+      (edge) => edge.source === connection.source
+    );
+
+    if (!existingEdge) {
       const edge = {
-        ...Connection,
-        id: `${Connection.source}-${Connection.target}`,
+        ...connection,
+        id: `${connection.source}-${connection.target}`,type: 'custom',
+        data: { text: 'Custom Edge' },
+        animated: true,
+        style: { stroke: 'blue', strokeWidth: 2 },
       };
-      console.log(edge);
       setEdges((eds) => addEdge(edge, eds));
-    },
-    [setEdges]
+    } else {
+      console.warn("Source node already has an outgoing edge.");
+    }
+  },
+  [edges, setEdges]
+);
+
+const checkEmptynodes=()=>{
+  const nodeIdsWithIncomingEdges = edges.map((edge) => edge.target);
+  const nodesWithoutIncomingEdges = nodes.filter(
+    (node) => !nodeIdsWithIncomingEdges.includes(node.id)
   );
 
+  if (nodesWithoutIncomingEdges.length > 1) {
+    setOnSaveError( nodesWithoutIncomingEdges);
+  }else{
+    setOnSaveError( []);
+  }
+}
+
   const onDrop = (event) => {
-    console.log(event)
     const reactFlowBounds = event.target.getBoundingClientRect();
     const clientX = event.clientX - reactFlowBounds.left;
     const clientY = event.clientY - reactFlowBounds.top;
@@ -36,7 +61,6 @@ const [inputMessage,setInputMessage]=useState('')
   };
   
   const selectNode =(e,nodeinfo)=>{
-    console.log(nodeinfo)
     setNodes((prevNodes) =>
         prevNodes.map((node) =>
           node.id === nodeinfo.id ? { ...node, selected: true } : node
@@ -60,6 +84,15 @@ const editNode=()=>{
     setInputMessage('')
 }
 
+const onClearSelection=()=>{
+  setNodes((prevNodes) =>
+    prevNodes.map((node) =>
+      node.selected ? { ...node, selected:false } : node
+    )
+  );
+  setSelectedNode("")
+    setInputMessage('')
+}
   return {
     onConnect,
     nodes,
@@ -73,6 +106,9 @@ const editNode=()=>{
     selectedNode,
     editNode,
     onHandleInput,
+    checkEmptynodes,
+    onSaveError,
+    onClearSelection
   };
 }
 

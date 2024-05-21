@@ -24,4 +24,15 @@ export const initialNodes = [
 
   },
 ];
-export const initialEdges = [{ id: "1-2", source: "1", target: "2" }];
+export const initialEdges = [
+  {
+    id: '1-2',
+    source: '1',
+    target: '2',
+    type: 'custom',
+    data: { text: 'Custom Edge' },
+    animated: true,
+    style: { stroke: 'blue', strokeWidth: 2 },
+  },
+  // Other edges...
+];
