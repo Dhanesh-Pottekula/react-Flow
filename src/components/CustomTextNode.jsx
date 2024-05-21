@@ -22,7 +22,7 @@ export default function CustomTextNode({ data, isConnectable,selected }) {
         </div>
       </div>
       <div className="px-2 py-1 bg-white flex-1 flex flex-col justify-center">
-        <p className="text-center text-gray-800 font-medium text-sm">
+        <p className="text-center text-gray-600 font-medium text-sm">
           {data.Text}
         </p>
       </div>

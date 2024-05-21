@@ -48,8 +48,6 @@ const checkEmptynodes=()=>{
     const reactFlowBounds = event.target.getBoundingClientRect();
     const clientX = event.clientX - reactFlowBounds.left;
     const clientY = event.clientY - reactFlowBounds.top;
-    console.log('Drop position:', clientX, clientY);
-    
     const newNode = {
       id: `${nodes.length + 1}`,
       type: nodeTypes.text,
