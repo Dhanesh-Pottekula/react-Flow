@@ -33,6 +33,7 @@ export default function CustomTextNode({ data, isConnectable,selected }) {
         style={{ width: '10px', height: '10px' }}
         className={handleClass}
       />
+  
     </div>
   );
 }
